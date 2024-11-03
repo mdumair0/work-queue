@@ -63,7 +63,7 @@ function App() {
   const logout = () => {
     setUser(null);
   };
-  console.log(loggedInUserData)
+
   return (
     <>
       {user ? "" : <Login handleLogin={handleLogin} />}

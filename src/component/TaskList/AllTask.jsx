@@ -1,37 +1,39 @@
-import React, { useContext } from 'react'
-import { AuthContext } from '../../context/AuthProvider'
+import React, { useContext } from "react";
+import { AuthContext } from "../../context/AuthProvider";
 
 const AllTask = () => {
-    const AuthData = useContext(AuthContext)
-    return (
-        <div id="taskList" className='flex flex-col bg-[#343434] h-40 p-5 mt-5 rounded overflow-auto'>
-            <div className='flex bg-red-400 py-2 px-4 my-2 justify-between rounded'>
-                <h2>Mohammad Umair</h2>
-                <h3>Make an App</h3>
-                <h5>Status</h5>
-            </div>
-            <div className='flex bg-green-400 py-2 px-4 my-2 justify-between rounded'>
-                <h2>Mohammad Umair</h2>
-                <h3>Make an App</h3>
-                <h5>Status</h5>
-            </div>
-            <div className='flex bg-blue-400 py-2 px-4 my-2 justify-between rounded'>
-                <h2>Mohammad Umair</h2>
-                <h3>Make an App</h3>
-                <h5>Status</h5>
-            </div>
-            <div className='flex bg-yellow-400 py-2 px-4 my-2 justify-between rounded'>
-                <h2>Mohammad Umair</h2>
-                <h3>Make an App</h3>
-                <h5>Status</h5>
-            </div>
-            <div className='flex bg-red-400 py-2 px-4 my-2 justify-between rounded'>
-                <h2>Mohammad Umair</h2>
-                <h3>Make an App</h3>
-                <h5>Status</h5>
-            </div>
-        </div>
-    )
-}
+  const AuthData = useContext(AuthContext);
 
-export default AllTask
+  return (
+    <div
+      id="taskList"
+      className="flex flex-col bg-[#343434] h-52 p-5 mt-2 rounded "
+    >
+      <div className="flex bg-red-400 py-2 px-4 mb-1 justify-between rounded">
+        <h2 className="w-1/5 bg-red-400">Employee Name</h2>
+        <h3 className="w-1/5 bg-red-400">New Tasks</h3>
+        <h5 className="w-1/5 bg-red-400">Active Tasks</h5>
+        <h5 className="w-1/5 bg-red-400">Completed</h5>
+        <h5 className="w-1/5 bg-red-400">Failed Tasks</h5>
+      </div>
+      <div id="taskList" className="overflow-auto">
+        {AuthData.empData.map((ele) => {
+            return (
+            <div
+                key={ele.id}
+                className="flex border border-red-400 py-2 px-4 my-1 justify-between rounded font-medium"
+            >
+                <h2 className="w-1/5 ">{ele.name}</h2>
+                <h3 className="w-1/5 text-yellow-300">{ele.tasks_count.new_task}</h3>
+                <h5 className="w-1/5 text-blue-400">{ele.tasks_count.active}</h5>
+                <h5 className="w-1/5 text-green-400">{ele.tasks_count.completed}</h5>
+                <h5 className="w-1/5 text-red-400">{ele.tasks_count.failed}</h5>
+            </div>
+            );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default AllTask;

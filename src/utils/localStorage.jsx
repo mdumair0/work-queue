@@ -6,7 +6,7 @@ const employees = [
         "name": "Alice Johnson",
         "tasks_count": {
             "active": 2,
-            "new_task": 1,
+            "new_task": 0,
             "completed": 1,
             "failed": 0
         },
@@ -52,8 +52,8 @@ const employees = [
         "password": "123",
         "name": "Bob Smith",
         "tasks_count": {
-            "active": 2,
-            "new_task": 1,
+            "active": 1,
+            "new_task": 0,
             "completed": 1,
             "failed": 1
         },
@@ -61,7 +61,7 @@ const employees = [
             {
                 "id": 4, // Added ID
                 "active": true,
-                "new_task": true,
+                "new_task": false,
                 "completed": false,
                 "failed": false,
                 "title": "Design New Logo",
@@ -71,7 +71,7 @@ const employees = [
             },
             {
                 "id": 5, // Added ID
-                "active": true,
+                "active": false,
                 "new_task": false,
                 "completed": false,
                 "failed": true,
@@ -99,7 +99,7 @@ const employees = [
         "password": "123",
         "name": "Charlie Brown",
         "tasks_count": {
-            "active": 2,
+            "active": 1,
             "new_task": 1,
             "completed": 1,
             "failed": 0
@@ -107,7 +107,7 @@ const employees = [
         "tasks": [
             {
                 "id": 7, // Added ID
-                "active": true,
+                "active": false,
                 "new_task": true,
                 "completed": false,
                 "failed": false,

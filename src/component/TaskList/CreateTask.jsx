@@ -1,10 +1,13 @@
 import React from "react";
 
 const CreateTask = () => {
+  const submitHandler = (e) => {
+    e.preventDefault()
+  }
   return (
     <div>
-      <form className="flex flex-wrap items-start justify-between bg-[#343434] px-10 py-5 rounded-md">
-        <div className="grid grid-cols-1 gap-4 content-around w-1/2">
+      <form onSubmit={(e) => submitHandler(e)} className="flex flex-wrap items-start justify-between bg-[#343434] px-10 py-5 rounded-md">
+        <div className="grid grid-cols-1 gap-2 content-around w-1/2">
           <div>
             <h3 className="font-semibold pb-1">Task Title</h3>
             <input
@@ -45,9 +48,9 @@ const CreateTask = () => {
               name=""
               id=""
               cols="30"
-              rows="10"
+              rows="9"
             ></textarea>
-            <button className="bg-emerald-600 font-semibold text-lg py-2 mt-4 rounded-md">
+            <button className="bg-emerald-600 font-semibold text-lg py-2 mt-4 rounded-md border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm">
               Create Task
             </button>
           </div>

@@ -27,7 +27,7 @@ const handleFailedClick = () => {
         active: (data.active ? taskNumber.active - 1 : taskNumber.active),
         completed: taskNumber.completed + 1,
     }
-    console.log({mathadis})
+
     updateTaskStatus(
       data.id,
       {
@@ -66,7 +66,7 @@ const handleActiveClick = () => {
         className={`flex flex-col justify-between sefl-start flex-shrink-0 h-full p-5 w-[300px] bg-green-400 rounded-xl`}
       >
        <div className="flex items-center h-1/8 justify-between">
-          <h3 className="bg-red-600 text-xs px-2 py-1 rounded">
+          <h3 className="bg-[#373737] text-xs px-2 py-1 rounded">
             {data.category}
           </h3>
           <h3 className="px-2 text-sm font-semibold rounded-lg">{data.date}</h3>
@@ -81,7 +81,7 @@ const handleActiveClick = () => {
           {data.new_task || data.failed || data.completed ? (
             <button
               onClick={() => handleActiveClick()}
-              className="bg-blue-600 p-2 rounded"
+              className="bg-blue-600 p-2 rounded border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm"
             >
               Active
             </button>
@@ -91,7 +91,7 @@ const handleActiveClick = () => {
           {data.new_task || data.active || data.failed? (
             <button
               onClick={() => handleCompletedClick()}
-              className="bg-green-600 p-2 rounded"
+              className="bg-green-600 p-2 rounded border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm"
             >
               Completed
             </button>
@@ -101,7 +101,7 @@ const handleActiveClick = () => {
           {data.new_task || data.active || data.completed ? (
             <button
               onClick={() => handleFailedClick()}
-              className="bg-red-600 p-2 rounded"
+              className="bg-red-600 p-2 rounded border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm"
             >
               Failed
             </button>

@@ -17,13 +17,11 @@ const TaskList = ({ data, setData }) => {
     };
 
     data.tasks_count.color = {
-        new_task: 'bg-yello-400',
+        new_task: 'bg-yellow-400',
         active: 'bg-blue-400',
         completed: 'bg-green-400',
-        active: 'bg-red-400',
+        failed: 'bg-red-400'
     }
-
-    console.log(data)
 
     return (
         <div id="taskList" className="flex items-center justify-start flex-nowrap overflow-x-auto gap-5 h-[60%] w-full py-5 my-10">
