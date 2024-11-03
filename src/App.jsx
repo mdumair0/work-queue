@@ -63,17 +63,17 @@ function App() {
   const logout = () => {
     setUser(null);
   };
-
+  console.log(loggedInUserData)
   return (
     <>
       {user ? "" : <Login handleLogin={handleLogin} />}
       {user == "emp" && loggedInUserData ? (
-        <EmpDashboard logout={logout} data={loggedInUserData} />
+        <EmpDashboard logout={logout} data={loggedInUserData} setData={setLoggedInUserData}/>
       ) : (
         ""
       )}
       {user == "admin" ? (
-        <AdminDashboard logout={logout} data={loggedInUserData} />
+        <AdminDashboard logout={logout} data={loggedInUserData} setData={setLoggedInUserData}/>
       ) : (
         ""
       )}

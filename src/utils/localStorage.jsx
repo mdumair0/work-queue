@@ -12,6 +12,7 @@ const employees = [
         },
         "tasks": [
             {
+                "id": 1, // Added ID
                 "active": true,
                 "new_task": false,
                 "completed": false,
@@ -22,8 +23,9 @@ const employees = [
                 "category": "Work"
             },
             {
+                "id": 2, // Added ID
                 "active": true,
-                "new_task": true,
+                "new_task": false,
                 "completed": false,
                 "failed": false,
                 "title": "Team Meeting",
@@ -32,6 +34,7 @@ const employees = [
                 "category": "Meeting"
             },
             {
+                "id": 3, // Added ID
                 "active": false,
                 "new_task": false,
                 "completed": true,
@@ -56,6 +59,7 @@ const employees = [
         },
         "tasks": [
             {
+                "id": 4, // Added ID
                 "active": true,
                 "new_task": true,
                 "completed": false,
@@ -66,6 +70,7 @@ const employees = [
                 "category": "Design"
             },
             {
+                "id": 5, // Added ID
                 "active": true,
                 "new_task": false,
                 "completed": false,
@@ -76,6 +81,7 @@ const employees = [
                 "category": "Research"
             },
             {
+                "id": 6, // Added ID
                 "active": false,
                 "new_task": false,
                 "completed": true,
@@ -100,6 +106,7 @@ const employees = [
         },
         "tasks": [
             {
+                "id": 7, // Added ID
                 "active": true,
                 "new_task": true,
                 "completed": false,
@@ -110,6 +117,7 @@ const employees = [
                 "category": "Presentation"
             },
             {
+                "id": 8, // Added ID
                 "active": true,
                 "new_task": false,
                 "completed": false,
@@ -120,6 +128,7 @@ const employees = [
                 "category": "Client Management"
             },
             {
+                "id": 9, // Added ID
                 "active": false,
                 "new_task": false,
                 "completed": true,
@@ -144,6 +153,7 @@ const employees = [
         },
         "tasks": [
             {
+                "id": 10, // Added ID
                 "active": true,
                 "new_task": false,
                 "completed": false,
@@ -154,6 +164,7 @@ const employees = [
                 "category": "Operations"
             },
             {
+                "id": 11, // Added ID
                 "active": true,
                 "new_task": true,
                 "completed": false,
@@ -164,6 +175,7 @@ const employees = [
                 "category": "Meeting"
             },
             {
+                "id": 12, // Added ID
                 "active": false,
                 "new_task": false,
                 "completed": true,
@@ -188,6 +200,7 @@ const employees = [
         },
         "tasks": [
             {
+                "id": 13, // Added ID
                 "active": true,
                 "new_task": false,
                 "completed": false,
@@ -198,6 +211,7 @@ const employees = [
                 "category": "Social Media"
             },
             {
+                "id": 14, // Added ID
                 "active": true,
                 "new_task": true,
                 "completed": false,
@@ -208,6 +222,7 @@ const employees = [
                 "category": "Content"
             },
             {
+                "id": 15, // Added ID
                 "active": false,
                 "new_task": false,
                 "completed": true,
@@ -219,7 +234,7 @@ const employees = [
             }
         ]
     }
-]
+];
 
 
 const admin = [
