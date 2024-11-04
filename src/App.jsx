@@ -8,7 +8,7 @@ import { AuthContext } from "./context/AuthProvider";
 function App() {
   const [user, setUser] = useState(null);
   const [loggedInUserData, setLoggedInUserData] = useState(null);
-  const AuthData = useContext(AuthContext);
+  const [userData, setUserData] = useContext(AuthContext);
 
   const checkCredentials = (checkData, dataArray, role) => {
     const user = dataArray.find(
@@ -46,13 +46,13 @@ function App() {
 
   const handleLogin = (email, password) => {
     if (
-      AuthData &&
-      checkCredentials({ email, password }, AuthData.adminData, "admin")
+      userData &&
+      checkCredentials({ email, password }, userData.adminData, "admin")
     ) {
       setUser("admin");
     } else if (
-      AuthData &&
-      checkCredentials({ email, password }, AuthData.empData, "emp")
+      userData &&
+      checkCredentials({ email, password }, userData.empData, "emp")
     ) {
       setUser("emp");
     } else {

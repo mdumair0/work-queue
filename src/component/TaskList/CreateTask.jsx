@@ -1,8 +1,44 @@
-import React from "react";
+import React, {useContext, useState} from "react";
+import { v4 as uuidv4 } from 'uuid';
+import { AuthContext } from "../../context/AuthProvider";
 
 const CreateTask = () => {
+
+  const [userData, setUserData] = useContext(AuthContext)
+
+  const [taskTitle, settaskTitle] = useState("")
+  const [taskDescription, settaskDescription] = useState("")
+  const [taskDate, settaskDate] = useState("")
+  const [assignTo, setassignTo] = useState("")
+  const [category, setcategory] = useState("")
+
+  const [Task, setTask] = useState({})
+
   const submitHandler = (e) => {
     e.preventDefault()
+
+    setTask({id: uuidv4(), taskTitle, taskDescription, taskDate, assignTo, category, active: false, new_task: true, failed:false, completed: false})
+
+    const {empData, adminData} = userData
+
+    empData.forEach((ele) => {
+      if (ele.name == assignTo) {
+        ele.tasks.push(Task)
+        ele.tasks_count.new_task = ele.tasks_count.new_task + 1
+      }
+    })
+
+    if (Task) {
+      setUserData({empData, adminData})
+      alert("Task added")
+    }
+
+    settaskTitle("")
+    settaskDescription("")
+    settaskDate("")
+    setassignTo("")
+    setcategory("")
+
   }
   return (
     <div>
@@ -11,6 +47,8 @@ const CreateTask = () => {
           <div>
             <h3 className="font-semibold pb-1">Task Title</h3>
             <input
+              value={taskTitle}
+              onChange={(e) => settaskTitle(e.target.value)}
               className="w-3/4 p-2 rounded bg-transparent border-[1px]"
               type="text"
               placeholder="make a UI design"
@@ -19,6 +57,8 @@ const CreateTask = () => {
           <div>
             <h3 className="font-semibold pb-1">Date</h3>
             <input
+              value={taskDate}
+              onChange={(e) => settaskDate(e.target.value)}
               className="w-3/4 p-2 rounded bg-transparent border-[1px]"
               type="date"
             />
@@ -26,6 +66,8 @@ const CreateTask = () => {
           <div>
             <h3 className="font-semibold pb-1">Assign to</h3>
             <input
+              value={assignTo}
+              onChange={(e) => setassignTo(e.target.value)}
               className="w-3/4 p-2 rounded bg-transparent border-[1px]"
               type="text"
               placeholder="Assignee Name"
@@ -34,6 +76,8 @@ const CreateTask = () => {
           <div>
             <h3 className="font-semibold pb-1">Category</h3>
             <input
+              value={category}
+              onChange={(e) => setcategory(e.target.value)}
               className="w-3/4 p-2 rounded bg-transparent border-[1px]"
               type="text"
               placeholder="Design, Dev, etc"
@@ -44,6 +88,8 @@ const CreateTask = () => {
           <div className="flex flex-col">
             <h3 className="font-semibold">Description</h3>
             <textarea
+              value={taskDescription}
+              onChange={(e) => settaskDescription(e.target.value)}
               className="bg-transparent border-[1px] rounded"
               name=""
               id=""

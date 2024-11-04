@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 
 const AllTask = () => {
-  const AuthData = useContext(AuthContext);
+  const [userData, setUserData] = useContext(AuthContext);
 
   return (
     <div
@@ -17,7 +17,9 @@ const AllTask = () => {
         <h5 className="w-1/5 bg-red-400">Failed Tasks</h5>
       </div>
       <div id="taskList" className="overflow-auto">
-        {AuthData.empData.map((ele) => {
+        
+        {userData.empData.map((ele) => {
+            if (ele && !!ele.id) {
             return (
             <div
                 key={ele.id}
@@ -29,7 +31,7 @@ const AllTask = () => {
                 <h5 className="w-1/5 text-green-400">{ele.tasks_count.completed}</h5>
                 <h5 className="w-1/5 text-red-400">{ele.tasks_count.failed}</h5>
             </div>
-            );
+            )};
         })}
       </div>
     </div>
