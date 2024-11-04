@@ -8,7 +8,7 @@ const Header = ({logout, data}) => {
   }
   return (
     <div className='flex items-center justify-between mb-2'>
-        <div className='text-2xl'>Hello , <br/><span className='text-3xl font-semibold'>{data && data.name}👋</span></div>
+        <div className='text-2xl'>Hello , <br/><span className='text md:text-3xl font-semibold'>{data && data.name}👋</span></div>
         <button onClick={() => handleLogout()} className='bg-red-600 text-lg font-medium text-white py-2 px-4 rounded-lg'>Log Out</button>
     </div>
   )

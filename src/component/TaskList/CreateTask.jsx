@@ -42,14 +42,14 @@ const CreateTask = () => {
   }
   return (
     <div>
-      <form onSubmit={(e) => submitHandler(e)} className="flex flex-wrap items-start justify-between bg-[#343434] px-10 py-5 rounded-md">
-        <div className="grid grid-cols-1 gap-2 content-around w-1/2">
+      <form onSubmit={(e) => submitHandler(e)} className="flex flex-wrap items-start justify-between bg-[#343434] px-5 md:px-10 py-5 rounded-md">
+        <div className="md:grid md:grid-cols-1 md:gap-2 content-around w-full md:w-1/2">
           <div>
             <h3 className="font-semibold pb-1">Task Title</h3>
             <input
               value={taskTitle}
               onChange={(e) => settaskTitle(e.target.value)}
-              className="w-3/4 p-2 rounded bg-transparent border-[1px]"
+              className="w-full md:w-3/4 p-2 rounded bg-transparent border-[1px]"
               type="text"
               placeholder="make a UI design"
             />
@@ -59,7 +59,7 @@ const CreateTask = () => {
             <input
               value={taskDate}
               onChange={(e) => settaskDate(e.target.value)}
-              className="w-3/4 p-2 rounded bg-transparent border-[1px]"
+              className="w-full md:w-3/4 p-2 rounded bg-transparent border-[1px]"
               type="date"
             />
           </div>
@@ -68,7 +68,7 @@ const CreateTask = () => {
             <input
               value={assignTo}
               onChange={(e) => setassignTo(e.target.value)}
-              className="w-3/4 p-2 rounded bg-transparent border-[1px]"
+              className="w-full md:w-3/4 p-2 rounded bg-transparent border-[1px]"
               type="text"
               placeholder="Assignee Name"
             />
@@ -78,13 +78,13 @@ const CreateTask = () => {
             <input
               value={category}
               onChange={(e) => setcategory(e.target.value)}
-              className="w-3/4 p-2 rounded bg-transparent border-[1px]"
+              className="w-full md:w-3/4 p-2 rounded bg-transparent border-[1px]"
               type="text"
               placeholder="Design, Dev, etc"
             />
           </div>
         </div>
-        <div className="w-1/2">
+        <div className="w-full md:w-1/2">
           <div className="flex flex-col">
             <h3 className="font-semibold">Description</h3>
             <textarea

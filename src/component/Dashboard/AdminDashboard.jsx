@@ -6,7 +6,7 @@ import AllTask from "../TaskList/AllTask";
 const AdminDashboard = ({logout, data}) => {
 
   return (
-    <div className="p-5 px-10 bg-[#1C1C1C] h-screen">
+    <div className="p-5 px-10 bg-[#1C1C1C] h-[1240px] md:h-screen">
       <Header logout={logout}/>
       <CreateTask />
       <AllTask />
