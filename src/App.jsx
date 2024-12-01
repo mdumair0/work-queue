@@ -13,7 +13,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [loggedInUserData, setLoggedInUserData] = useState(null);
   const [userDataa, setUserData] = useContext(AuthContext);
-  const url = "https://task-manager-33dh.onrender.com/server";
+  const url = "https://task-manager-33dh.onrender.com";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,7 +22,7 @@ function App() {
       const intervalMs = 10000; // Log every 10 seconds
 
       // Create a function to handle the Axios request
-      const axiosRequest = axios.get(url, { timeout: timeoutMs });
+      const axiosRequest = axios.get(`${url}/server`, { timeout: timeoutMs });
 
       // Create a progress logger
       let elapsed = 0;
@@ -145,7 +145,7 @@ function App() {
       ) : (
         ""
       )}
-      {user == "admin" ? (
+      {user == "admin" && !!loggedInUserData? (
         <AdminDashboard
           logout={logout}
           data={loggedInUserData}
