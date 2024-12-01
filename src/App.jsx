@@ -78,7 +78,7 @@ function App() {
       setUser(loggedInUser.role);
       setLoggedInUserData(loggedInUser);
     }
-  }, []);
+  }, [user]);
 
   const handleLogin = async (email, password) => {
     const waitId = WaitingToast("Loggin In Please Wait");
