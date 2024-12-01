@@ -80,7 +80,7 @@ function App() {
   const handleLogin = async (email, password) => {
     const waitId = WaitingToast("Loggin In Please Wait");
     try {
-      const userData = await axios.post(`http://localhost:3000/user/login`, {email, password})
+      const userData = await axios.post(`${url}/user/login`, {email, password})
       const role = userData.data.user.role
 
       if (
@@ -105,7 +105,7 @@ function App() {
     const waitId = WaitingToast("Signing Up Please Wait");
     
     try {
-      const userData = await axios.post(`http://localhost:3000/user`, {name, email, password, role})
+      const userData = await axios.post(`${url}/user`, {name, email, password, role})
 
       if (
         userData.status == 201 &&
