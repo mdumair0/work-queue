@@ -47,7 +47,7 @@ router.post('/user/login', async (req, res) => {
     const token = await user.generateAuthToken();
     res.send({user, token});
   } catch (Error) {
-    res.status(400).send({Error: 'User not found'});
+    res.status(400).send({Error: 'Email or Password did not match'});
   }
 });
 
