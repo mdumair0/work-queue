@@ -33,7 +33,7 @@ function App() {
         } else if (elapsed == 20) {
           notify("We’re almost there, just a few more seconds", "😁");
         } else if (elapsed == 30) {
-          notify("Taking longer than usual", "😓")
+          notify("Taking longer than usual", "😓");
         }
       }, intervalMs);
 
@@ -62,8 +62,11 @@ function App() {
     fetchData();
   }, []);
 
-  const checkCredentials = ({data}, role) => {
-    localStorage.setItem("loggedInUser", JSON.stringify({name:data.user.name, role}));
+  const checkCredentials = ({ data }, role) => {
+    localStorage.setItem(
+      "loggedInUser",
+      JSON.stringify({ name: data.user.name, role })
+    );
     localStorage.setItem("token", data.token);
 
     return true;
@@ -80,22 +83,25 @@ function App() {
   const handleLogin = async (email, password) => {
     const waitId = WaitingToast("Loggin In Please Wait");
     try {
-      const userData = await axios.post(`${url}/user/login`, {email, password})
-      const role = userData.data.user.role
+      const userData = await axios.post(`${url}/user/login`, {
+        email,
+        password,
+      });
+      const role = userData.data.user.role;
 
-      if (
-        userData.status == 200 &&
-        checkCredentials( userData, role)
-      ) {
-        successToast('User is Logged In', waitId);
+      if (userData.status == 200 && checkCredentials(userData, role)) {
+        successToast("User is Logged In", waitId);
         setUser(role);
-      } 
+      }
     } catch (error) {
-      console.log(error.response.data.Error)
+      console.log(error.response.data.Error);
       if (error.code === "ECONNABORTED") {
         failureToast(waitId);
       } else {
-        failureToast(`${error.response.data.Error ||  "Somethin went wrong"} 😓` , waitId);
+        failureToast(
+          `${error.response.data.Error || "Somethin went wrong"} 😓`,
+          waitId
+        );
         console.error("Request failed:", error.message);
       }
     }
@@ -103,57 +109,57 @@ function App() {
 
   const handleSignUp = async (name, email, password, role) => {
     const waitId = WaitingToast("Signing Up Please Wait");
-    
-    try {
-      const userData = await axios.post(`${url}/user`, {name, email, password, role})
 
-      if (
-        userData.status == 201 &&
-        checkCredentials( userData, role)
-      ) {
-        successToast('User Created', waitId);
+    try {
+      const userData = await axios.post(`${url}/user`, {
+        name,
+        email,
+        password,
+        role,
+      });
+
+      if (userData.status == 201 && checkCredentials(userData, role)) {
+        successToast("User Created", waitId);
         setUser(role);
       }
     } catch (error) {
-      console.log(error.response.data.message)
+      console.log(error.response.data.message);
       if (error.code === "ECONNABORTED") {
         failureToast(waitId);
       } else {
-        failureToast(`${error.response.data.message ||  "Somethin went wrong"} 😓` , waitId);
+        failureToast(
+          `${error.response.data.message || "Somethin went wrong"} 😓`,
+          waitId
+        );
         console.error("Request failed:", error.message);
       }
     }
-  }
+  };
 
   const logout = () => {
     const waitId = WaitingToast("Logging Out");
     setUser(null);
-    successToast('User is Logged Out', waitId);
+    successToast("User is Logged Out", waitId);
   };
 
   return (
     <>
-      <Toaster />
-
-      {user ? "" : <Login handleLogin={handleLogin} handleSignUp={handleSignUp} />}
-      {user == "emp" && loggedInUserData ? (
-        <EmpDashboard
-          logout={logout}
-          data={loggedInUserData}
-          setData={setLoggedInUserData}
-        />
-      ) : (
-        ""
-      )}
-      {user == "admin" && !!loggedInUserData? (
-        <AdminDashboard
-          logout={logout}
-          data={loggedInUserData}
-          setData={setLoggedInUserData}
-        />
-      ) : (
-        ""
-      )}
+        <Toaster />
+        {!user ? (
+            <Login handleLogin={handleLogin} handleSignUp={handleSignUp} />
+        ) : user === "emp" ? (
+            <EmpDashboard
+                logout={logout}
+                data={loggedInUserData}
+                setData={setLoggedInUserData}
+            />
+        ) : user === "admin" ? (
+            <AdminDashboard
+                logout={logout}
+                data={loggedInUserData}
+                setData={setLoggedInUserData}
+            />
+        ) : null}
     </>
   );
 }
