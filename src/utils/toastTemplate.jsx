@@ -1,8 +1,8 @@
 import toast from 'react-hot-toast';
 
-const successToast = (toastId) => toast.success('Server is up!', {id: toastId,});
-const failureToast = (toastId) => toast.error("Server failed to load 😓", {id: toastId,});
-const WaitingToast = () => toast.loading('Server is spinning up');
+const successToast = (message, toastId) => toast.success(message, {id: toastId,});
+const failureToast = (message, toastId) => toast.error(message || "Server failed to load 😓", {id: toastId,});
+const WaitingToast = (message) => toast.loading(message);
 
 const notify = (message, icon) => toast(message, {
     duration: 3000,

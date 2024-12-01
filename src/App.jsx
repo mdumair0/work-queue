@@ -12,12 +12,12 @@ function App() {
   const { successToast, failureToast, WaitingToast, notify } = toastTemplate;
   const [user, setUser] = useState(null);
   const [loggedInUserData, setLoggedInUserData] = useState(null);
-  const [userData, setUserData] = useContext(AuthContext);
+  const [userDataa, setUserData] = useContext(AuthContext);
+  const url = "https://task-manager-33dh.onrender.com/server";
 
   useEffect(() => {
     const fetchData = async () => {
-      const waitId = WaitingToast();
-      const url = "https://task-manager-33dh.onrender.com/server";
+      const waitId = WaitingToast("Server is spinning up");
       const timeoutMs = 50000; // 40 seconds
       const intervalMs = 10000; // Log every 10 seconds
 
@@ -28,7 +28,6 @@ function App() {
       let elapsed = 0;
       const interval = setInterval(() => {
         elapsed += intervalMs / 1000; // Convert to seconds
-        console.log(`Waiting for response... ${elapsed}s elapsed`);
         if (elapsed == 10) {
           notify("We're getting things ready for you...", "😊");
         } else if (elapsed == 20) {
@@ -41,7 +40,7 @@ function App() {
       try {
         const response = await axiosRequest; // Wait for Axios to complete
         if (response.status === 200) {
-          successToast(waitId);
+          successToast("Server is up!", waitId);
         }
         setTimeout(() => {
           notify("You are ready to go", "👍");
@@ -59,89 +58,84 @@ function App() {
       } finally {
         clearInterval(interval); // Clear the interval when request completes
       }
-      // try {
-      //   const waitId = WaitingToast();
-      //   const response = await axios.get(
-      //     "https://task-manager-33dh.onrender.com/server"
-      //   );
-      //   console.log(response);
-
-      //   if (response.status === 200) {
-      //     successToast(waitId);
-      //     await setTimeout(() => {
-      //       notify("Server is UP!!", "🫰🏼");
-      //     }, 2000);
-      //   } else {
-      //     failureToast(waitId);
-      //     setTimeout(() => {
-      //       notify("Server is loading please wait", "😓");
-      //     }, 25000);
-      //   }
-      // } catch (error) {
-      //   console.error("Error:", error);
-      // }
     };
     fetchData();
   }, []);
 
-  const checkCredentials = (checkData, dataArray, role) => {
-    const user = dataArray.find(
-      (data) =>
-        data.email === checkData.email && data.password === checkData.password
-    );
+  const checkCredentials = ({data}, role) => {
+    localStorage.setItem("loggedInUser", JSON.stringify({name:data.user.name, role}));
+    localStorage.setItem("token", data.token);
 
-    localStorage.setItem("loggedInUser", JSON.stringify({ user, role }));
-    if (role == "emp") {
-      setLoggedInUserData(user);
-    }
-
-    return true && user;
+    return true;
   };
-
-  // useEffect(() => {
-  //   if (AuthData) {
-  //     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-  //     if (loggedInUser) {
-  //       setUser(loggedInUser.role);
-  //       setLoggedInUserData(user);
-  //     }
-  //   }
-  // }, [AuthData]);
 
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-
     if (loggedInUser) {
       setUser(loggedInUser.role);
-      setLoggedInUserData(loggedInUser.user);
+      setLoggedInUserData(loggedInUser);
     }
   }, []);
 
-  const handleLogin = (email, password) => {
-    if (
-      userData &&
-      checkCredentials({ email, password }, userData.adminData, "admin")
-    ) {
-      setUser("admin");
-    } else if (
-      userData &&
-      checkCredentials({ email, password }, userData.empData, "emp")
-    ) {
-      setUser("emp");
-    } else {
-      alert("Invalid Credentials");
+  const handleLogin = async (email, password) => {
+    const waitId = WaitingToast("Loggin In Please Wait");
+    try {
+      const userData = await axios.post(`http://localhost:3000/user/login`, {email, password})
+      const role = userData.data.user.role
+
+      if (
+        userData.status == 200 &&
+        checkCredentials( userData, role)
+      ) {
+        successToast('User is Logged In', waitId);
+        setUser(role);
+      } 
+    } catch (error) {
+      console.log(error.response.data.Error)
+      if (error.code === "ECONNABORTED") {
+        failureToast(waitId);
+      } else {
+        failureToast(`${error.response.data.Error ||  "Somethin went wrong"} 😓` , waitId);
+        console.error("Request failed:", error.message);
+      }
     }
   };
 
+  const handleSignUp = async (name, email, password, role) => {
+    const waitId = WaitingToast("Signing Up Please Wait");
+    
+    try {
+      const userData = await axios.post(`http://localhost:3000/user`, {name, email, password, role})
+
+      if (
+        userData.status == 201 &&
+        checkCredentials( userData, role)
+      ) {
+        successToast('User Created', waitId);
+        setUser(role);
+      }
+    } catch (error) {
+      console.log(error.response.data.message)
+      if (error.code === "ECONNABORTED") {
+        failureToast(waitId);
+      } else {
+        failureToast(`${error.response.data.message ||  "Somethin went wrong"} 😓` , waitId);
+        console.error("Request failed:", error.message);
+      }
+    }
+  }
+
   const logout = () => {
+    const waitId = WaitingToast("Logging Out");
     setUser(null);
+    successToast('User is Logged Out', waitId);
   };
 
   return (
     <>
       <Toaster />
 
-      {user ? "" : <Login handleLogin={handleLogin} />}
+      {user ? "" : <Login handleLogin={handleLogin} handleSignUp={handleSignUp} />}
       {user == "emp" && loggedInUserData ? (
         <EmpDashboard
           logout={logout}
