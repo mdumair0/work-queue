@@ -13,53 +13,55 @@ function App() {
   const [user, setUser] = useState(null);
   const [loggedInUserData, setLoggedInUserData] = useState(null);
   const [userDataa, setUserData] = useContext(AuthContext);
-  const url = "https://task-manager-33dh.onrender.com";
+  const url = import.meta.env.SERVER_URL;
 
   useEffect(() => {
-    const fetchData = async () => {
-      const waitId = WaitingToast("Server is spinning up");
-      const timeoutMs = 50000; // 40 seconds
-      const intervalMs = 10000; // Log every 10 seconds
+    if (!localStorage.getItem("loggedInUser")) {
+      const fetchData = async () => {
+        const waitId = WaitingToast("Server is spinning up");
+        const timeoutMs = 50000; // 40 seconds
+        const intervalMs = 10000; // Log every 10 seconds
 
-      // Create a function to handle the Axios request
-      const axiosRequest = axios.get(`${url}/server`, { timeout: timeoutMs });
+        // Create a function to handle the Axios request
+        const axiosRequest = axios.get(`${url}/server`, { timeout: timeoutMs });
 
-      // Create a progress logger
-      let elapsed = 0;
-      const interval = setInterval(() => {
-        elapsed += intervalMs / 1000; // Convert to seconds
-        if (elapsed == 10) {
-          notify("We're getting things ready for you...", "😊");
-        } else if (elapsed == 20) {
-          notify("We’re almost there, just a few more seconds", "😁");
-        } else if (elapsed == 30) {
-          notify("Taking longer than usual", "😓");
-        }
-      }, intervalMs);
+        // Create a progress logger
+        let elapsed = 0;
+        const interval = setInterval(() => {
+          elapsed += intervalMs / 1000; // Convert to seconds
+          if (elapsed == 10) {
+            notify("We're getting things ready for you...", "😊");
+          } else if (elapsed == 20) {
+            notify("We’re almost there, just a few more seconds", "😁");
+          } else if (elapsed == 30) {
+            notify("Taking longer than usual", "😓");
+          }
+        }, intervalMs);
 
-      try {
-        const response = await axiosRequest; // Wait for Axios to complete
-        if (response.status === 200) {
-          successToast("Server is up!", waitId);
-        }
-        setTimeout(() => {
-          notify("You are ready to go", "👍");
-        }, 2500);
-      } catch (error) {
-        if (error.code === "ECONNABORTED") {
-          failureToast(waitId);
-        } else {
-          failureToast(waitId);
+        try {
+          const response = await axiosRequest; // Wait for Axios to complete
+          if (response.status === 200) {
+            successToast("Server is up!", waitId);
+          }
           setTimeout(() => {
-            notify("Please try again later", "😓");
-          }, 3500);
-          console.error("Request failed:", error.message);
+            notify("You are ready to go", "👍");
+          }, 2500);
+        } catch (error) {
+          if (error.code === "ECONNABORTED") {
+            failureToast(waitId);
+          } else {
+            failureToast(waitId);
+            setTimeout(() => {
+              notify("Please try again later", "😓");
+            }, 3500);
+            console.error("Request failed:", error.message);
+          }
+        } finally {
+          clearInterval(interval); // Clear the interval when request completes
         }
-      } finally {
-        clearInterval(interval); // Clear the interval when request completes
-      }
-    };
-    fetchData();
+      };
+      fetchData();
+    }
   }, []);
 
   const checkCredentials = ({ data }, role) => {
@@ -144,22 +146,22 @@ function App() {
 
   return (
     <>
-        <Toaster />
-        {!user ? (
-            <Login handleLogin={handleLogin} handleSignUp={handleSignUp} />
-        ) : user === "emp" ? (
-            <EmpDashboard
-                logout={logout}
-                data={loggedInUserData}
-                setData={setLoggedInUserData}
-            />
-        ) : user === "admin" ? (
-            <AdminDashboard
-                logout={logout}
-                data={loggedInUserData}
-                setData={setLoggedInUserData}
-            />
-        ) : null}
+      <Toaster />
+      {!user ? (
+        <Login handleLogin={handleLogin} handleSignUp={handleSignUp} />
+      ) : user === "emp" ? (
+        <EmpDashboard
+          logout={logout}
+          data={loggedInUserData}
+          setData={setLoggedInUserData}
+        />
+      ) : user === "admin" ? (
+        <AdminDashboard
+          logout={logout}
+          data={loggedInUserData}
+          setData={setLoggedInUserData}
+        />
+      ) : null}
     </>
   );
 }
