@@ -7,7 +7,5 @@ app.listen(port, () => {
 })
 
 app.get('/server', async (req, res) => {
-    setTimeout(() => {
-        return res.status(200).send( "Server is up and running" );
-    }, 10000)
+    return res.status(200).send( "Server is up and running" );
 });
