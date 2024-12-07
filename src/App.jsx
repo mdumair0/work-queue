@@ -14,7 +14,8 @@ function App() {
   const [loggedInUserData, setLoggedInUserData] = useState(null);
   const [userDataa, setUserData] = useContext(AuthContext);
   const url = import.meta.env.VITE_SERVERS_URL;
-
+  console.log('API URL:', url);
+  
   useEffect(() => {
     if (!localStorage.getItem("loggedInUser")) {
       const fetchData = async () => {
