@@ -13,7 +13,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [loggedInUserData, setLoggedInUserData] = useState(null);
   const [userDataa, setUserData] = useContext(AuthContext);
-  const url = import.meta.env.SERVER_URL;
+  const url = import.meta.env.VITE_SERVERS_URL;
 
   useEffect(() => {
     if (!localStorage.getItem("loggedInUser")) {
