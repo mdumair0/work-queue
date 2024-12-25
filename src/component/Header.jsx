@@ -2,8 +2,8 @@ import React from 'react'
 
 const Header = ({logout, data}) => {
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     localStorage.clear()
   }
   return (

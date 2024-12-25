@@ -1,53 +1,80 @@
-import React, {useContext, useState} from "react";
-import { v4 as uuidv4 } from 'uuid';
+import React, { useContext, useState } from "react";
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 import { AuthContext } from "../../context/AuthProvider";
 
 const CreateTask = () => {
+  const [userData, setUserData] = useContext(AuthContext);
+  const url = "http://localhost:3000";
 
-  const [userData, setUserData] = useContext(AuthContext)
+  const [title, settaskTitle] = useState("");
+  const [description, settaskDescription] = useState("");
+  const [taskDate, settaskDate] = useState("");
+  const [userId, setassignTo] = useState("");
+  const [category, setcategory] = useState("");
 
-  const [taskTitle, settaskTitle] = useState("")
-  const [taskDescription, settaskDescription] = useState("")
-  const [taskDate, settaskDate] = useState("")
-  const [assignTo, setassignTo] = useState("")
-  const [category, setcategory] = useState("")
-
-  const [Task, setTask] = useState({})
+  const [Task, setTask] = useState({});
 
   const submitHandler = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    setTask({id: uuidv4(), taskTitle, taskDescription, taskDate, assignTo, category, active: false, new_task: true, failed:false, completed: false})
+    const missingFields = [];
 
-    const {empData, adminData} = userData
+    if (!title) missingFields.push("Name");
+    if (!taskDate) missingFields.push("Date");
+    if (!userId) missingFields.push("Assign To");
+    if (!category) missingFields.push("Category");
 
-    empData.forEach((ele) => {
-      if (ele.name == assignTo) {
-        ele.tasks.push(Task)
-        ele.tasks_count.new_task = ele.tasks_count.new_task + 1
-      }
-    })
-
-    if (Task) {
-      setUserData({empData, adminData})
-      alert("Task added")
+    if (missingFields.length > 0) {
+      alert(`Please enter the required fields: ${missingFields.join(", ")}`);
+      return;
     }
 
-    settaskTitle("")
-    settaskDescription("")
-    settaskDate("")
-    setassignTo("")
-    setcategory("")
+    setTask({
+      title,
+      description,
+      taskDate,
+      userId,
+      category,
+    });
 
+    const empData = userData.map((ele) => {
+      if (ele._id == userId) {
+        ele.tasks.push(Task);
+        ele.tasks_count.new_task = ele.tasks_count.new_task + 1;
+      }
+      return ele;
+    });
+
+    if (Task) {
+      const savedTask = saveTask(Task);
+      console.log(savedTask)
+      setUserData(empData);
+      alert("Task added");
+    }
+  };
+
+  async function saveTask(body) {
+    console.log("TASK", body)
+    const token = await localStorage.getItem("token");
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // Format the token as "Bearer <token>"
+    };
+    return await axios.post(`${url}/task`, body, { headers });
   }
   return (
     <div>
-      <form onSubmit={(e) => submitHandler(e)} className="flex flex-wrap items-start justify-between bg-[#343434] px-5 md:px-10 py-5 rounded-md">
+      <form
+        onSubmit={(e) => submitHandler(e)}
+        className="flex flex-wrap items-start justify-between bg-[#343434] px-5 md:px-10 py-5 rounded-md"
+      >
         <div className="md:grid md:grid-cols-1 md:gap-2 content-around w-full md:w-1/2">
           <div>
             <h3 className="font-semibold pb-1">Task Title</h3>
             <input
-              value={taskTitle}
+              required
+              value={title}
               onChange={(e) => settaskTitle(e.target.value)}
               className="w-full md:w-3/4 p-2 rounded bg-transparent border-[1px]"
               type="text"
@@ -57,6 +84,7 @@ const CreateTask = () => {
           <div>
             <h3 className="font-semibold pb-1">Date</h3>
             <input
+              required
               value={taskDate}
               onChange={(e) => settaskDate(e.target.value)}
               className="w-full md:w-3/4 p-2 rounded bg-transparent border-[1px]"
@@ -65,17 +93,33 @@ const CreateTask = () => {
           </div>
           <div>
             <h3 className="font-semibold pb-1">Assign to</h3>
-            <input
-              value={assignTo}
+            <select
+              required
+              id="options"
+              value={userId}
               onChange={(e) => setassignTo(e.target.value)}
               className="w-full md:w-3/4 p-2 rounded bg-transparent border-[1px]"
-              type="text"
-              placeholder="Assignee Name"
-            />
+            >
+              <option className="bg-transparent text-black " disabled value="">
+                Please Select One
+              </option>
+              {userData?.map((ele) => {
+                return (
+                  <option
+                    className="bg-transparent text-black "
+                    key={ele._id}
+                    value={ele._id}
+                  >
+                    {ele.name}
+                  </option>
+                );
+              })}
+            </select>
           </div>
           <div>
             <h3 className="font-semibold pb-1">Category</h3>
             <input
+              required
               value={category}
               onChange={(e) => setcategory(e.target.value)}
               className="w-full md:w-3/4 p-2 rounded bg-transparent border-[1px]"
@@ -88,7 +132,7 @@ const CreateTask = () => {
           <div className="flex flex-col">
             <h3 className="font-semibold">Description</h3>
             <textarea
-              value={taskDescription}
+              value={description}
               onChange={(e) => settaskDescription(e.target.value)}
               className="bg-transparent border-[1px] rounded"
               name=""

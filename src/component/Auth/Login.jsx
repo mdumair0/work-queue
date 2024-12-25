@@ -52,13 +52,13 @@ const Login = ({ handleLogin, handleSignUp }) => {
               Login
             </button>
             <button
-              onClick={() => handleLogin("employee1@example.com", "123")}
+              onClick={() => handleLogin("e@e.com", "123")}
               className="outline-none border-none bg-emerald-600 text-xl m-2 p-2 w-full rounded-xl"
             >
               Emp Login
             </button>
             <button
-              onClick={() => handleLogin("a@a.com", "unkb")}
+              onClick={() => handleLogin("m@m.com", "123")}
               className="outline-none border-none bg-emerald-600 text-xl m-2 p-2 w-full rounded-xl"
             >
               Admin Login
