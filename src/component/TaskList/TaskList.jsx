@@ -9,7 +9,7 @@ import toastTemplate from "../../utils/toastTemplate";
 const TaskList = ({ data, setData }) => {
   const { successToast, failureToast, WaitingToast, notify } = toastTemplate;
   const [isLoading, setIsloading] = useState(null)
-  const url = "http://localhost:3000";
+  const url = import.meta.env.VITE_SERVERS_URL;
 
   const updateTaskStatus = async (id, status, taskNumber) => {
     setIsloading(id)

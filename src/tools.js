@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://localhost:3000";
+const url = import.meta.env.VITE_SERVERS_URL;
 
 const fetchData = async () => {
   try {

@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/AuthProvider";
 
 const CreateTask = () => {
   const [userData, setUserData] = useContext(AuthContext);
-  const url = "http://localhost:3000";
+  const url = import.meta.env.VITE_SERVERS_URL;
 
   const [title, settaskTitle] = useState("");
   const [description, settaskDescription] = useState("");
