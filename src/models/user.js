@@ -38,6 +38,24 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  tasks_count: {
+    active: {
+      type: Number,
+      default: 0
+    },
+    new_task: {
+      type: Number,
+      default: 0
+    },
+    completed: {
+      type: Number,
+      default: 0
+    },
+    failed: {
+      type: Number,
+      default: 0
+    },
+  },
   avatar: {
     type: Buffer,
   },
