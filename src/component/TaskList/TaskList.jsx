@@ -8,11 +8,10 @@ import toastTemplate from "../../utils/toastTemplate";
 
 const TaskList = ({ data, setData }) => {
   const { successToast, failureToast, WaitingToast, notify } = toastTemplate;
-  const [isLoading, setIsloading] = useState(null)
-  const url = import.meta.env.VITE_SERVERS_URL;
-
+  const [isLoading, setIsloading] = useState(null);
+   const url = "http://localhost:3000"
   const updateTaskStatus = async (id, status, taskNumber) => {
-    setIsloading(id)
+    setIsloading(id);
     const waitId = WaitingToast("Saving Tasks Data");
     const response = await updateTask(status, taskNumber);
     if (response.status == 200) {
@@ -25,9 +24,9 @@ const TaskList = ({ data, setData }) => {
         ),
       }));
     } else {
-        failureToast("Failed To Save Tasks Data", waitId)
+      failureToast("Failed To Save Tasks Data", waitId);
     }
-    setIsloading(null)
+    setIsloading(null);
   };
 
   async function updateTask(data, taskNumber) {
@@ -38,7 +37,6 @@ const TaskList = ({ data, setData }) => {
     };
     delete taskNumber.color;
 
-    console.log(data);
     const response = await axios.patch(
       `${url}/task/${data._id}`,
       { data, taskNumber },
@@ -48,68 +46,27 @@ const TaskList = ({ data, setData }) => {
   }
 
   const handleClick = {
-    handleFailedClick: (data, taskNumber) => {
-      updateTaskStatus(
-        data._id,
-        {
-          ...data,
-          new_task: false,
-          failed: true,
-          active: false,
-          completed: false,
-        },
-        {
-          new_task: data.new_task
-            ? taskNumber.new_task - 1
-            : taskNumber.new_task,
-          failed: taskNumber.failed + 1,
-          active: data.active ? taskNumber.active - 1 : taskNumber.active,
-          completed: data.completed
-            ? taskNumber.completed - 1
-            : taskNumber.completed,
-        }
-      );
-    },
-    handleCompletedClick: (data, taskNumber) => {
-      let mathadis = {
-        new_task: data.new_task ? taskNumber.new_task - 1 : taskNumber.new_task,
-        failed: data.failed ? taskNumber.failed - 1 : taskNumber.failed,
-        active: data.active ? taskNumber.active - 1 : taskNumber.active,
-        completed: taskNumber.completed + 1,
+    handleStatusChange: (task, taskNumber, newStatus) => {
+      const oldStatus = Object.keys(taskComponents).find((key) => task[key]);
+
+      const updatedTaskNumbers = {
+        ...taskNumber,
+        [oldStatus]: taskNumber[oldStatus] - 1,
+        [newStatus]: taskNumber[newStatus] + 1,
       };
 
+      const updatedTaskStatus = {
+        new_task: newStatus === "new_task",
+        active: newStatus === "active",
+        completed: newStatus === "completed",
+        failed: newStatus === "failed",
+      };
+
+      // Update the task status
       updateTaskStatus(
-        data._id,
-        {
-          ...data,
-          new_task: false,
-          failed: false,
-          active: false,
-          completed: true,
-        },
-        mathadis
-      );
-    },
-    handleActiveClick: (data, taskNumber) => {
-      updateTaskStatus(
-        data._id,
-        {
-          ...data,
-          new_task: false,
-          failed: false,
-          active: true,
-          completed: false,
-        },
-        {
-          new_task: data.new_task
-            ? taskNumber.new_task - 1
-            : taskNumber.new_task,
-          failed: data.failed ? taskNumber.failed - 1 : taskNumber.failed,
-          active: taskNumber.active + 1,
-          completed: data.completed
-            ? taskNumber.completed - 1
-            : taskNumber.completed,
-        }
+        task._id,
+        { ...task, ...updatedTaskStatus },
+        updatedTaskNumbers
       );
     },
   };
@@ -121,58 +78,38 @@ const TaskList = ({ data, setData }) => {
     failed: "bg-red-400",
   };
 
+  const taskComponents = {
+    active: AcceptTask,
+    new_task: NewTask,
+    completed: CompleteTask,
+    failed: FailedTask,
+  };
+
   return (
     <div
       id="taskList"
       className="flex items-center justify-start flex-nowrap overflow-x-auto gap-5 h-[60%] w-full py-5 my-10"
     >
       {data &&
-        data.tasks.map((empData, it) => {
-          if (empData.active) {
-            return (
-              <AcceptTask
-                key={it}
-                data={empData}
-                handleClick={handleClick}
-                updateTaskStatus={updateTaskStatus}
-                taskNumber={data.tasks_count}
-                isLoading={isLoading}
-              />
-            );
-          } else if (empData.new_task) {
-            return (
-              <NewTask
-                key={it}
-                data={empData}
-                handleClick={handleClick}
-                updateTaskStatus={updateTaskStatus}
-                taskNumber={data.tasks_count}
-                isLoading={isLoading}
-              />
-            );
-          } else if (empData.completed) {
-            return (
-              <CompleteTask
-                key={it}
-                data={empData}
-                handleClick={handleClick}
-                updateTaskStatus={updateTaskStatus}
-                taskNumber={data.tasks_count}
-                isLoading={isLoading}
-              />
-            );
-          } else if (empData.failed) {
-            return (
-              <FailedTask
-                key={it}
-                data={empData}
-                handleClick={handleClick}
-                updateTaskStatus={updateTaskStatus}
-                taskNumber={data.tasks_count}
-                isLoading={isLoading}
-              />
-            );
-          }
+        data.tasks.map((task) => {
+          const taskType = Object.keys(taskComponents).find((key) => task[key]);
+          const TaskComponent = taskComponents[taskType];
+          return (
+            <TaskComponent
+              key={task._id}
+              data={task}
+              handleClick={{
+                ...handleClick,
+                handleStatusChange: (newStatus) =>
+                  handleClick.handleStatusChange(
+                    task,
+                    data.tasks_count,
+                    newStatus
+                  ),
+              }}
+              isLoading={isLoading}
+            />
+          );
         })}
     </div>
   );

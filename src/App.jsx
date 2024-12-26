@@ -10,183 +10,144 @@ import { fetchData, fetchTasks } from "./tools";
 
 function App() {
   const { successToast, failureToast, WaitingToast, notify } = toastTemplate;
-  const [user, setUser] = useState(null);
-  const [loggedInUserData, setLoggedInUserData] = useState(null);
+  const [dataOfUser, setUser] = useState(null);
+
   const [userData, setUserData] = useContext(AuthContext);
-  const url = import.meta.env.VITE_SERVERS_URL;
-
-  useEffect(() => {
-    if (!localStorage.getItem("loggedInUser")) {
-      const fetchData = async () => {
-        const waitId = WaitingToast("Server is spinning up");
-        const timeoutMs = 50000; // 40 seconds
-        const intervalMs = 10000; // Log every 10 seconds
-
-        // Create a function to handle the Axios request
-        const axiosRequest = axios.get(`${url}/server`, { timeout: timeoutMs });
-
-        // Create a progress logger
-        let elapsed = 0;
-        const interval = setInterval(() => {
-          elapsed += intervalMs / 1000; // Convert to seconds
-          if (elapsed == 10) {
-            notify("We're getting things ready for you...", "😊");
-          } else if (elapsed == 20) {
-            notify("We’re almost there, just a few more seconds", "😁");
-          } else if (elapsed == 30) {
-            notify("Taking longer than usual", "😓");
-          }
-        }, intervalMs);
-
-        try {
-          const response = await axiosRequest; // Wait for Axios to complete
-          if (response.status === 200) {
-            successToast("Server is up!", waitId);
-          }
-          setTimeout(() => {
-            notify("You are ready to go", "👍");
-          }, 2500);
-        } catch (error) {
-          if (error.code === "ECONNABORTED") {
-            failureToast("Server failed to load 😓", waitId);
-          } else {
-            failureToast("Server failed to load 😓", waitId);
-            setTimeout(() => {
-              notify("Please try again later", "😓");
-            }, 3500);
-            console.error("Request failed:", error.message);
-          }
-        } finally {
-          clearInterval(interval); // Clear the interval when request completes
-        }
-      };
-      fetchData();
+  const url = "http://localhost:3000";
+  // Helper to handle API requests with loading states and errors
+  const handleApiRequest = async (
+    requestFn,
+    loadingMessage,
+    successMessage
+  ) => {
+    const waitId = WaitingToast(loadingMessage);
+    try {
+      const response = await requestFn();
+      if (successMessage) successToast(successMessage, waitId);
+      return response;
+    } catch (error) {
+      failureToast(
+        error.response?.data?.message || "Something went wrong 😓",
+        waitId
+      );
+      console.error("Request failed:", error.message);
     }
-  }, []);
-
-  const checkCredentials = ({ data }, role) => {
-    localStorage.setItem(
-      "loggedInUser",
-      JSON.stringify({ name: data.user.name, userId: data.user._id, role })
-    );
-    localStorage.setItem("token", data.token);
-
-    return true;
   };
 
-  async function allTasks() {
-    const { tasks, users } = await fetchData();
+  useEffect(() => {
+    const spinServer = async () => {
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      const token = localStorage.getItem("token");
+      const tokenTime = localStorage.getItem("tokenTime");
 
-    let transformedData = users.reduce((acc, item) => {
-      const { _id, ...rest } = item;
-      acc[_id] = { ...item, tasks: [] };
+      if (Date.now() - tokenTime > 840000) {
+        await handleApiRequest(
+          () => axios.get(`${url}/server`),
+          "Server is spinning up...",
+          "Server is ready!"
+        );
+      }
+      setUser(loggedInUser);
+
+      // Ensure tasks are fetched based on user role
+      if (loggedInUser && loggedInUser.role === "admin") {
+        await fetchAllTasks(loggedInUser);
+      } else if (loggedInUser && loggedInUser.role === "emp") {
+        const headers = { Authorization: `Bearer ${token}` };
+        const employee = await axios.get(`${url}/user/me`, { headers });
+        const user = employee.data;
+
+        await fetchEmpTasks(user);
+      }
+    };
+
+    spinServer();
+  }, []);
+
+  const setLoggedInUser = (data, user) => {
+    localStorage.setItem(
+      "loggedInUser",
+      JSON.stringify({
+        name: data.user.name,
+        userId: data.user._id,
+        user,
+        role: user.role,
+      })
+    );
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("tokenTime", Date.now());
+    setUser(user);
+  };
+
+  const fetchAllTasks = async (user) => {
+    const { tasks, users } = await fetchData();
+    const transformedData = users.reduce((acc, user) => {
+      acc[user._id] = {
+        ...user,
+        tasks: tasks.filter((t) => t.userId === user._id),
+      };
       return acc;
     }, {});
+    setUserData({ data: Object.values(transformedData), name: user.name });
+  };
 
-    tasks?.forEach((ele) => {
-      if (!!transformedData[ele.userId]) {
-        transformedData[ele.userId].tasks.push(ele);
-      }
-    });
-
-    transformedData = Object.values(transformedData);
-    setUserData(transformedData);
-  }
-
-  async function empTasks(userData) {
+  const fetchEmpTasks = async (user) => {
     const tasks = await fetchTasks();
-    const tasks_count = userData.tasks_count;
-    setUserData({ tasks, tasks_count });
-  }
+    setUserData({ tasks, tasks_count: user.tasks_count, name: user.name });
+  };
 
   const handleLogin = async (email, password) => {
-    const waitId = WaitingToast("Loggin In Please Wait");
-    try {
-      const userData = await axios.post(`${url}/user/login`, {
-        email,
-        password,
-      });
-      const role = userData.data.user.role;
+    const loginFn = () => axios.post(`${url}/user/login`, { email, password });
 
-      if (userData.status == 200 && checkCredentials(userData, role)) {
-        successToast("User is Logged In", waitId);
-        setUser(role);
-        console.log(role);
-      }
+    const response = await handleApiRequest(
+      loginFn,
+      "Logging in...",
+      "Login successful!"
+    );
+    if (response?.data) {
+      const { user, token } = response.data;
+      setLoggedInUser(response.data, user);
 
-      if (role == "admin") {
-        allTasks();
-      } else {
-        empTasks(userData.data.user);
-      }
-    } catch (error) {
-      console.log(error.response.data.Error);
-      if (error.code === "ECONNABORTED") {
-        failureToast("Server failed to load 😓", waitId);
-      } else {
-        failureToast(
-          `${error.response.data.Error || "Somethin went wrong"} 😓`,
-          waitId
-        );
-        console.error("Request failed:", error.message);
-      }
+      user.role === "admin" ? fetchAllTasks(user) : fetchEmpTasks(user);
     }
   };
 
   const handleSignUp = async (name, email, password, role) => {
-    const waitId = WaitingToast("Signing Up Please Wait");
+    const signUpFn = () =>
+      axios.post(`${url}/user`, { name, email, password, role });
 
-    try {
-      const userData = await axios.post(`${url}/user`, {
-        name,
-        email,
-        password,
-        role,
-      });
-
-      if (userData.status == 201 && checkCredentials(userData, role)) {
-        successToast("User Created", waitId);
-        setUser(role);
-      }
-    } catch (error) {
-      console.log(error.response.data.message);
-      if (error.code === "ECONNABORTED") {
-        failureToast("Server failed to load 😓", waitId);
-      } else {
-        failureToast(
-          `${error.response.data.message || "Somethin went wrong"} 😓`,
-          waitId
-        );
-        console.error("Request failed:", error.message);
-      }
+    const response = await handleApiRequest(
+      signUpFn,
+      "Signing up...",
+      "Account created!"
+    );
+    if (response?.data) {
+      setLoggedInUser(response.data, role);
     }
   };
 
   const logout = async () => {
-    const waitId = WaitingToast("Logging Out");
-    const token = await localStorage.getItem("token");
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // Format the token as "Bearer <token>"
-    };
-    const response = await axios.post(`${url}/user/logout`, {}, { headers });
+    const token = localStorage.getItem("token");
+    const headers = { Authorization: `Bearer ${token}` };
+
+    await handleApiRequest(
+      () => axios.post(`${url}/user/logout`, {}, { headers }),
+      "Logging out...",
+      "Logout successful!"
+    );
+    setUserData(null);
     setUser(null);
-    successToast("User is Logged Out", waitId);
   };
 
   return (
     <>
       <Toaster />
-      {!user ? (
+      {!dataOfUser?.role ? (
         <Login handleLogin={handleLogin} handleSignUp={handleSignUp} />
-      ) : user === "emp" ? (
+      ) : dataOfUser?.role === "emp" ? (
         <EmpDashboard logout={logout} data={userData} setData={setUserData} />
-      ) : user === "admin" ? (
-        <AdminDashboard
-          logout={logout}
-          data={loggedInUserData}
-          setData={setLoggedInUserData}
-        />
+      ) : dataOfUser?.role === "admin" ? (
+        <AdminDashboard logout={logout} data={userData} setData={setUserData} />
       ) : null}
     </>
   );

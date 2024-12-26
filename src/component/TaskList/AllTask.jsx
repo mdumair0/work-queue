@@ -17,7 +17,7 @@ const AllTask = ({ data }) => {
         <h5 className="w-1/5 bg-red-400">Failed Tasks</h5>
       </div>
       <div id="taskList" className="overflow-auto">
-        {userData?.map((ele) => {
+        {userData?.data?.map((ele) => {
           if (ele && !!ele._id) {
             return (
               <div

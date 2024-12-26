@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const url = import.meta.env.VITE_SERVERS_URL;
-
+const url = "http://localhost:3000"
 const fetchData = async () => {
   try {
     const token = await localStorage.getItem("token");

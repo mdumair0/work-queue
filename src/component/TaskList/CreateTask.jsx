@@ -5,8 +5,7 @@ import { AuthContext } from "../../context/AuthProvider";
 
 const CreateTask = () => {
   const [userData, setUserData] = useContext(AuthContext);
-  const url = import.meta.env.VITE_SERVERS_URL;
-
+   const url = "http://localhost:3000"
   const [title, settaskTitle] = useState("");
   const [description, settaskDescription] = useState("");
   const [taskDate, settaskDate] = useState("");
@@ -15,47 +14,66 @@ const CreateTask = () => {
 
   const [Task, setTask] = useState({});
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-
+  
     const missingFields = [];
-
+  
     if (!title) missingFields.push("Name");
     if (!taskDate) missingFields.push("Date");
     if (!userId) missingFields.push("Assign To");
     if (!category) missingFields.push("Category");
-
+  
     if (missingFields.length > 0) {
       alert(`Please enter the required fields: ${missingFields.join(", ")}`);
       return;
     }
-
-    setTask({
+  
+    // Construct the task object inline
+    const newTask = {
       title,
       description,
       taskDate,
       userId,
       category,
-    });
-
-    const empData = userData.map((ele) => {
-      if (ele._id == userId) {
-        ele.tasks.push(Task);
-        ele.tasks_count.new_task = ele.tasks_count.new_task + 1;
+    };
+  
+    // Update user data locally
+    const updatedUserData = userData?.data?.map((ele) => {
+      if (ele._id === userId) {
+        return {
+          ...ele,
+          tasks: [...ele.tasks, newTask],
+          tasks_count: {
+            ...ele.tasks_count,
+            new_task: ele.tasks_count.new_task + 1,
+          },
+        };
       }
       return ele;
     });
-
-    if (Task) {
-      const savedTask = saveTask(Task);
-      console.log(savedTask)
-      setUserData(empData);
-      alert("Task added");
+  
+    try {
+      // Save task to the server
+      const response = await saveTask(newTask);
+  
+      if (response.status === 201) {
+        setUserData((prev) => ({
+          ...prev,
+          data: updatedUserData,
+        }));
+        alert("Task added successfully!");
+      } else {
+        alert("Failed to save the task. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error saving task:", error);
+      alert("An error occurred while saving the task.");
     }
   };
+  
 
   async function saveTask(body) {
-    console.log("TASK", body)
     const token = await localStorage.getItem("token");
     const headers = {
       "Content-Type": "application/json",
@@ -103,7 +121,7 @@ const CreateTask = () => {
               <option className="bg-transparent text-black " disabled value="">
                 Please Select One
               </option>
-              {userData?.map((ele) => {
+              {userData?.data?.map((ele) => {
                 return (
                   <option
                     className="bg-transparent text-black "

@@ -1,7 +1,6 @@
 import React, { act, useState } from "react";
 
 const AcceptTask = ({ data, handleClick, taskNumber, updateTaskStatus, isLoading }) => {
-
   return (
     data && (
       <div className={`flex flex-col justify-between sefl-start flex-shrink-0 h-full p-5 w-[300px] bg-blue-400 rounded-xl ${isLoading ? "bg-gray-600": ""}`}>
@@ -21,7 +20,7 @@ const AcceptTask = ({ data, handleClick, taskNumber, updateTaskStatus, isLoading
           {data.new_task || data.failed || data.completed ? (
             <button
               disabled={isLoading}
-              onClick={() => handleClick.handleActiveClick(data, taskNumber)}
+              onClick={() => handleClick.handleStatusChange("active", data, taskNumber)}
               className="w-1/3  bg-blue-600 p-2 rounded border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm"
             >
               Active
@@ -33,7 +32,7 @@ const AcceptTask = ({ data, handleClick, taskNumber, updateTaskStatus, isLoading
             <button
             disabled={isLoading}
 
-              onClick={() => handleClick.handleCompletedClick(data, taskNumber)}
+              onClick={() => handleClick.handleStatusChange("completed", data, taskNumber)}
               className="w-1/3 bg-green-600 p-2 rounded border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm"
             >
               Completed
@@ -45,7 +44,7 @@ const AcceptTask = ({ data, handleClick, taskNumber, updateTaskStatus, isLoading
             <button
             disabled={isLoading}
 
-              onClick={() => handleClick.handleFailedClick(data, taskNumber)}
+              onClick={() => handleClick.handleStatusChange("failed", data, taskNumber)}
               className="w-1/3 bg-red-600 p-2 rounded border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm"
             >
               Failed

@@ -21,7 +21,7 @@ const FailedTask = ({ data, handleClick, taskNumber, updateTaskStatus, isLoading
         <div className="flex h-1/8 justify-items-end justify-between text-sm py-1">
           {data.new_task || data.failed || data.completed ? (
             <button
-              onClick={() => handleClick.handleActiveClick(data, taskNumber)}
+              onClick={() => handleClick.handleStatusChange("active", data, taskNumber)}
               className="bg-blue-600 p-2 rounded border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm"
             >
               Active
@@ -31,7 +31,7 @@ const FailedTask = ({ data, handleClick, taskNumber, updateTaskStatus, isLoading
           )}
           {data.new_task || data.active || data.failed ? (
             <button
-              onClick={() => handleClick.handleCompletedClick(data, taskNumber)}
+              onClick={() => handleClick.handleStatusChange("completed", data, taskNumber)}
               className="bg-green-600 p-2 rounded border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm"
             >
               Completed
@@ -41,7 +41,7 @@ const FailedTask = ({ data, handleClick, taskNumber, updateTaskStatus, isLoading
           )}
           {data.new_task || data.active || data.completed ? (
             <button
-              onClick={() => handleClick.handleFailedClick(data, taskNumber)}
+              onClick={() => handleClick.handleStatusChange("failed", data, taskNumber)}
               className="bg-red-600 p-2 rounded border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm"
             >
               Failed
