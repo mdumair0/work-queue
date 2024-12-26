@@ -1,35 +1,35 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
+import toastTemplate from "../../utils/toastTemplate";
 import { AuthContext } from "../../context/AuthProvider";
 
 const CreateTask = () => {
-  const [userData, setUserData] = useContext(AuthContext);
   const url = import.meta.env.VITE_SERVERS_URL;
+  const { successToast, failureToast, WaitingToast } = toastTemplate;
+  const [userData, setUserData] = useContext(AuthContext);
   const [title, settaskTitle] = useState("");
   const [description, settaskDescription] = useState("");
   const [taskDate, settaskDate] = useState("");
   const [userId, setassignTo] = useState("");
   const [category, setcategory] = useState("");
 
-  const [Task, setTask] = useState({});
-
   const submitHandler = async (e) => {
     e.preventDefault();
-  
+    
     const missingFields = [];
-  
+    
     if (!title) missingFields.push("Name");
     if (!taskDate) missingFields.push("Date");
     if (!userId) missingFields.push("Assign To");
     if (!category) missingFields.push("Category");
-  
+    
     if (missingFields.length > 0) {
       alert(`Please enter the required fields: ${missingFields.join(", ")}`);
       return;
     }
-  
-    // Construct the task object inline
+    const user = userData.data.find(user => user._id === userId);
+    const waitId = WaitingToast(`Creating Task ${'For ' + user.name}`)
+    
     const newTask = {
       title,
       description,
@@ -37,8 +37,7 @@ const CreateTask = () => {
       userId,
       category,
     };
-  
-    // Update user data locally
+
     const updatedUserData = userData?.data?.map((ele) => {
       if (ele._id === userId) {
         return {
@@ -54,7 +53,6 @@ const CreateTask = () => {
     });
   
     try {
-      // Save task to the server
       const response = await saveTask(newTask);
   
       if (response.status === 201) {
@@ -62,9 +60,9 @@ const CreateTask = () => {
           ...prev,
           data: updatedUserData,
         }));
-        alert("Task added successfully!");
+        successToast(`Task Created Successfully`, waitId)
       } else {
-        alert("Failed to save the task. Please try again.");
+        failureToast(`Failed to Create Task. Something Went Wrong.`, waitId)
       }
     } catch (error) {
       console.error("Error saving task:", error);
@@ -77,7 +75,7 @@ const CreateTask = () => {
     const token = await localStorage.getItem("token");
     const headers = {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // Format the token as "Bearer <token>"
+      Authorization: `Bearer ${token}`,
     };
     return await axios.post(`${url}/task`, body, { headers });
   }

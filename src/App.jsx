@@ -9,7 +9,7 @@ import axios from "axios";
 import { fetchData, fetchTasks } from "./tools";
 
 function App() {
-  const { successToast, failureToast, WaitingToast, notify } = toastTemplate;
+  const { successToast, failureToast, WaitingToast } = toastTemplate;
   const [dataOfUser, setUser] = useState(null);
 
   const [userData, setUserData] = useContext(AuthContext);
