@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const url = https://task-manager-33dh.onrender.com
+const url = import.meta.env.VITE_SERVERS_URL;
+
 const fetchData = async () => {
   try {
     const token = await localStorage.getItem("token");

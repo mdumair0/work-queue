@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/AuthProvider";
 
 const CreateTask = () => {
   const [userData, setUserData] = useContext(AuthContext);
-   const url = https://task-manager-33dh.onrender.com
+  const url = import.meta.env.VITE_SERVERS_URL;
   const [title, settaskTitle] = useState("");
   const [description, settaskDescription] = useState("");
   const [taskDate, settaskDate] = useState("");

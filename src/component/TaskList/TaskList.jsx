@@ -9,7 +9,7 @@ import toastTemplate from "../../utils/toastTemplate";
 const TaskList = ({ data, setData }) => {
   const { successToast, failureToast, WaitingToast, notify } = toastTemplate;
   const [isLoading, setIsloading] = useState(null);
-   const url = https://task-manager-33dh.onrender.com
+  const url = import.meta.env.VITE_SERVERS_URL;
   const updateTaskStatus = async (id, status, taskNumber) => {
     setIsloading(id);
     const waitId = WaitingToast("Saving Tasks Data");

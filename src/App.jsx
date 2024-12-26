@@ -13,7 +13,7 @@ function App() {
   const [dataOfUser, setUser] = useState(null);
 
   const [userData, setUserData] = useContext(AuthContext);
-  const url = https://task-manager-33dh.onrender.com
+  const url = import.meta.env.VITE_SERVERS_URL;
   // Helper to handle API requests with loading states and errors
   const handleApiRequest = async (
     requestFn,
