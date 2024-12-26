@@ -13,7 +13,7 @@ function App() {
   const [dataOfUser, setUser] = useState(null);
 
   const [userData, setUserData] = useContext(AuthContext);
-  const url = "http://localhost:3000";
+  const url = https://task-manager-33dh.onrender.com
   // Helper to handle API requests with loading states and errors
   const handleApiRequest = async (
     requestFn,
