@@ -35,7 +35,7 @@ WorkQueue is a task management web application built using the MERN stack (Mongo
 1.  **Clone the Repository:**
 
     ```bash
-    git clone [https://github.com/mdumair0/work-queue.git](https://github.com/mdumair0/work-queue.git)
+    git clone https://github.com/mdumair0/work-queue.git
     cd workqueue
     ```
 
