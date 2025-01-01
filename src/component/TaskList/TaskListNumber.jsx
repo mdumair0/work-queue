@@ -1,5 +1,3 @@
-import React from 'react'
-
 const TaskListNumber = ({data}) => {
     return (
         <div className='grid grid-cols-2 text-center md:flex justify-between gap-5 screen my-10'>

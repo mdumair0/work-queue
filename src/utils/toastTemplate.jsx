@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import toast from 'react-hot-toast';
 
 const successToast = (message, toastId) => toast.success(message, {id: toastId,});

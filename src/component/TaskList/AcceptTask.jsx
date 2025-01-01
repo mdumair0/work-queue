@@ -1,9 +1,13 @@
-import React, { act, useState } from "react";
-
-const AcceptTask = ({ data, handleClick, taskNumber, updateTaskStatus, isLoading }) => {
+const AcceptTask = ({
+  data,
+  handleClick,
+  taskNumber,
+}) => {
   return (
     data && (
-      <div className={`flex flex-col justify-between sefl-start flex-shrink-0 h-full p-5 w-[300px] bg-blue-400 rounded-xl ${isLoading ? "bg-gray-600": ""}`}>
+      <div
+        className={`flex flex-col justify-between sefl-start flex-shrink-0 h-full p-5 w-[300px] bg-blue-400 rounded-xl`}
+      >
         <div className="flex items-center h-1/8 justify-between">
           <h3 className="bg-[#373737] text-xs px-2 py-1 rounded">
             {data.category}
@@ -12,14 +16,13 @@ const AcceptTask = ({ data, handleClick, taskNumber, updateTaskStatus, isLoading
         </div>
 
         <div className="flex flex-col h-6/8 justify-evenly">
-            <h2 className="text-2xl font-semibold">{data.title}</h2>
-            <p>{data.description}</p>
+          <h2 className="text-2xl font-semibold">{data.title}</h2>
+          <p>{data.description}</p>
         </div>
 
         <div className="flex h-1/8 justify-items-end justify-between text-sm py-1">
           {data.new_task || data.failed || data.completed ? (
             <button
-              disabled={isLoading}
               onClick={() => handleClick.handleStatusChange("active", data, taskNumber)}
               className="w-1/3  bg-blue-600 p-2 rounded border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm"
             >
@@ -28,10 +31,8 @@ const AcceptTask = ({ data, handleClick, taskNumber, updateTaskStatus, isLoading
           ) : (
             ""
           )}
-          {data.new_task || data.active || data.failed? (
+          {data.new_task || data.active || data.failed ? (
             <button
-            disabled={isLoading}
-
               onClick={() => handleClick.handleStatusChange("completed", data, taskNumber)}
               className="w-1/3 bg-green-600 p-2 rounded border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm"
             >
@@ -42,8 +43,6 @@ const AcceptTask = ({ data, handleClick, taskNumber, updateTaskStatus, isLoading
           )}
           {data.new_task || data.active || data.completed ? (
             <button
-            disabled={isLoading}
-
               onClick={() => handleClick.handleStatusChange("failed", data, taskNumber)}
               className="w-1/3 bg-red-600 p-2 rounded border-r-1 border-b-1 border-slate-800 drop-shadow-md hover:drop-shadow-sm"
             >

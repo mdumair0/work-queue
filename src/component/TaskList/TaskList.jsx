@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import AcceptTask from "./AcceptTask";
 import NewTask from "./NewTask";
 import CompleteTask from "./CompleteTask";
@@ -7,7 +7,7 @@ import axios from "axios";
 import toastTemplate from "../../utils/toastTemplate";
 
 const TaskList = ({ data, setData }) => {
-  const { successToast, failureToast, WaitingToast, notify } = toastTemplate;
+  const { successToast, failureToast, WaitingToast } = toastTemplate;
   const [isLoading, setIsloading] = useState(null);
   const url = import.meta.env.VITE_SERVERS_URL;
   const updateTaskStatus = async (id, status, taskNumber) => {

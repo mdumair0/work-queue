@@ -1,11 +1,9 @@
-import React, { act, useState } from "react";
-
-const NewTask = ({ data, handleClick, taskNumber, updateTaskStatus, isLoading }) => {
+ const NewTask = ({ data, handleClick, taskNumber }) => {
 
   return (
     data && (
       <div
-        className={`flex flex-col justify-between sefl-start flex-shrink-0 h-full p-5 w-[300px] bg-yellow-400 rounded-xl ${isLoading ? "bg-gray-600": ""}`}
+        className={`flex flex-col justify-between sefl-start flex-shrink-0 h-full p-5 w-[300px] bg-yellow-400 rounded-xl`}
       >
         <div className="flex items-center h-1/8 justify-between">
           <h3 className="bg-[#373737] text-xs px-2 py-1 rounded">

@@ -1,7 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 
-const AllTask = ({ data }) => {
+const AllTask = () => {
+  // eslint-disable-next-line no-unused-vars
   const [userData, setUserData] = useContext(AuthContext);
 
   return (

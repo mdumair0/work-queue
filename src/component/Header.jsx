@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Header = ({logout, data}) => {
 
   const handleLogout = async () => {

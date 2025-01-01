@@ -1,4 +1,3 @@
-import React from "react";
 import Header from "../Header";
 import TaskListNumber from "../TaskList/TaskListNumber";
 import TaskList from "../TaskList/TaskList";

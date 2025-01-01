@@ -6,7 +6,7 @@ import { AuthContext } from "./context/AuthProvider";
 import { Toaster } from "react-hot-toast";
 import toastTemplate from "./utils/toastTemplate";
 import axios from "axios";
-import { fetchData, fetchTasks } from "./tools";
+import { fetchData, fetchTasks } from "./utils/tools";
 
 function App() {
   const { successToast, failureToast, WaitingToast } = toastTemplate;
@@ -105,7 +105,7 @@ function App() {
       "Login successful!"
     );
     if (response?.data) {
-      const { user, token } = response.data;
+      const { user } = response.data;
       setLoggedInUser(response.data, user);
 
       user.role === "admin" ? fetchAllTasks(user) : fetchEmpTasks(user);
@@ -147,7 +147,7 @@ function App() {
       ) : dataOfUser?.role === "emp" ? (
         <EmpDashboard logout={logout} data={userData} setData={setUserData} />
       ) : dataOfUser?.role === "admin" ? (
-        <AdminDashboard logout={logout} data={userData} setData={setUserData} />
+        <AdminDashboard logout={logout} data={userData} />
       ) : null}
     </>
   );
