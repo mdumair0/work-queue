@@ -35,7 +35,7 @@ WorkQueue is a task management web application built using the MERN stack (Mongo
 1.  **Clone the Repository:**
 
     ```bash
-    git clone [https://github.com/your-username/workqueue.git](https://github.com/your-username/workqueue.git)
+    git clone [https://github.com/mdumair0/work-queue.git](https://github.com/mdumair0/work-queue.git)
     cd workqueue
     ```
 
@@ -100,15 +100,17 @@ The application exposes several API endpoints for user interactions. Here's a br
 
 **Authentication**
 
-*   `POST /api/auth/register`: Registers a new user within the system.
-*   `POST /api/auth/login`: Logs in an existing user, returning a JWT token upon successful authentication.
+*   `POST /user`: Registers a new user within the system.
+*   `POST /user/login`: Logs in an existing user, returning a JWT token upon successful authentication.
+*   `POST /user/logout`: Logs Out the current logged-in user.
+*   `DELETE /user/:id`: Deletes a User.
 
 **Task Management**
 
-*   `GET /api/tasks`: Retrieves all tasks associated with the logged-in user, considering their role-based permissions.
-*   `POST /api/tasks`: Creates a new task within the system.
-*   `PUT /api/tasks/:id`: Updates an existing task's details.
-*   `DELETE /api/tasks/:id`: Deletes a task.
+*   `GET /tasks`: Retrieves all tasks associated with the logged-in user, considering their role-based permissions.
+*   `POST /task`: Creates a new task within the system.
+*   `PUT /task/:id`: Updates an existing task's details.
+*   `DELETE /task/:id`: Deletes a task.
 
 **Employee Management (Admin Only)**
 
@@ -121,4 +123,4 @@ The application exposes several API endpoints for user interactions. Here's a br
 
 *   **Login:** Users can log in with their credentials (email and password).
 *   **Task Management:** Once logged in, users can manage their tasks according to their permissions.
-*   **Admin Role:** Admins have the ability to manage employees and assign tasks to employees.
+*   **Admin Role:** Admins have the ability to manage and assign tasks to employees.
