@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Login = ({ handleLogin, handleSignUp }) => {
+const Login = ({ handleLogin, handleSignUp, serverSpinUp }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("admin");
@@ -57,12 +57,15 @@ const Login = ({ handleLogin, handleSignUp }) => {
                   type="password"
                   placeholder="Enter Your Password"
                 />
-                <button className="outline-none border-none bg-emerald-600 text-xl m-2 p-2 w-full rounded-xl">
+                <button 
+                  disabled={!serverSpinUp}
+                  className={`outline-none border-none ${!serverSpinUp ? 'bg-slate-600 cursor-not-allowed' : 'bg-emerald-600'} text-xl m-2 p-2 w-full rounded-xl`}>
                   Login
                 </button>
                 <button
+                  disabled={!serverSpinUp}
                   onClick={() => setSignUp(true)}
-                  className="outline-none border-none bg-red-600 text-xl m-2 p-2 w-full rounded-xl"
+                  className={`outline-none border-none ${!serverSpinUp ? 'bg-slate-600 cursor-not-allowed' : 'bg-red-600'} text-xl m-2 p-2 w-full rounded-xl`}
                 >
                   Sign Up
                 </button>
@@ -72,8 +75,9 @@ const Login = ({ handleLogin, handleSignUp }) => {
               <div className="my-6">
                 <h1 className="pb-1">Employee Login</h1>
                 <button
+                  disabled={!serverSpinUp}
                   onClick={() => handleLogin("e@e.com", "123")}
-                  className="outline-none border-none bg-emerald-600 text-xl p-2 w-full rounded-xl"
+                  className={`outline-none border-none ${!serverSpinUp ? 'bg-slate-600 cursor-not-allowed' : 'bg-emerald-600'} text-xl p-2 w-full rounded-xl`}
                 >
                   Emp Login
                 </button>
@@ -81,8 +85,9 @@ const Login = ({ handleLogin, handleSignUp }) => {
               <div className="my-6">
                 <h1 className="pb-1">Admin Login</h1>
                 <button
+                  disabled={!serverSpinUp}
                   onClick={() => handleLogin("m@m.com", "123")}
-                  className="outline-none border-none bg-emerald-600 text-xl p-2 w-full rounded-xl"
+                  className={`outline-none border-none ${!serverSpinUp ? 'bg-slate-600 cursor-not-allowed' : 'bg-emerald-600'} text-xl p-2 w-full rounded-xl`}
                 >
                   Admin Login
                 </button>

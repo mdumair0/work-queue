@@ -11,6 +11,7 @@ import { fetchData, fetchTasks } from "./utils/tools";
 function App() {
   const { successToast, failureToast, WaitingToast } = toastTemplate;
   const [dataOfUser, setUser] = useState(null);
+  const [serverSpinUp, setServerSpinUp] = useState(false)
 
   const [userData, setUserData] = useContext(AuthContext);
   const url = import.meta.env.VITE_SERVERS_URL;
@@ -27,7 +28,7 @@ function App() {
       return response;
     } catch (error) {
       failureToast(
-        error.response?.data?.message || "Something went wrong 😓",
+        error.response?.data?.message || error.response?.data?.Error || "Something went wrong 😓",
         waitId
       );
       console.error("Request failed:", error.message);
@@ -41,11 +42,15 @@ function App() {
       const tokenTime = localStorage.getItem("tokenTime");
 
       if (Date.now() - tokenTime > 840000) {
-        await handleApiRequest(
+        const response = await handleApiRequest(
           () => axios.get(`${url}/server`),
           "Server is spinning up...",
           "Server is ready!"
         );
+
+        if (response.status == 200) {
+          setServerSpinUp(true)
+        }
       }
       setUser(loggedInUser);
 
@@ -143,7 +148,7 @@ function App() {
     <>
       <Toaster />
       {!dataOfUser?.role ? (
-        <Login handleLogin={handleLogin} handleSignUp={handleSignUp} />
+        <Login handleLogin={handleLogin} handleSignUp={handleSignUp} serverSpinUp={serverSpinUp}/>
       ) : dataOfUser?.role === "emp" ? (
         <EmpDashboard logout={logout} data={userData} setData={setUserData} />
       ) : dataOfUser?.role === "admin" ? (

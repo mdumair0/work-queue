@@ -4,6 +4,7 @@ const auth = require('../middleware/auth');
 const multer = require('multer');
 const sharp = require('sharp');
 const {sendWelcomeEmail, sendExitEmail} = require('../emails/account');
+const Task = require('../models/tasks');
 
 const router = new express.Router();
 
@@ -93,10 +94,20 @@ router.patch('/user/me', auth, async (req, res) => {
 });
 
 // Delete the logged in user
-router.delete('/user/me', auth, async (req, res) => {
+router.delete('/user/:id', auth, async (req, res) => {
   try {
-    await req.user.remove();
-    res.send( req.user );
+    if (req.user.role == "admin") {
+      const user = await User.findByIdAndRemove(req.params.id);
+      if (user) {
+        await Task.deleteMany({userId: req.params.id})
+      }
+      res.send({Success: `${user.name} and ${user.name}'s Tasks Deleted Successfully`});
+    } else if (req.user.role == "emp") {
+      res.status(401).send({
+        "error": "Unauthorized",
+        "message": "You are not authorized to perform this action."
+      })
+    }
   } catch (e) {
     res.status(500).send(e);
   }
