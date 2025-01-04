@@ -112,12 +112,6 @@ The application exposes several API endpoints for user interactions. Here's a br
 *   `PUT /task/:id`: Updates an existing task's details.
 *   `DELETE /task/:id`: Deletes a task.
 
-**Employee Management (Admin Only)**
-
-*   `GET /api/employees`: Retrieves a list of all employees.
-*   `POST /api/employees`: Adds a new employee.
-*   `PUT /api/employees/:id`: Updates employee information.
-*   `DELETE /api/employees/:id`: Deletes an employee.
 
 ## Usage
 
