@@ -3,7 +3,7 @@ const User = require('../models/user');
 const auth = require('../middleware/auth');
 const multer = require('multer');
 const sharp = require('sharp');
-const {sendWelcomeEmail, sendExitEmail} = require('../emails/account');
+// const {sendWelcomeEmail, sendExitEmail} = require('../emails/account');
 const Task = require('../models/tasks');
 
 const router = new express.Router();
