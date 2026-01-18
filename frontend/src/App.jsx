@@ -43,7 +43,7 @@ function App() {
 
       if (Date.now() - tokenTime > 840000) {
         const response = await handleApiRequest(
-          () => axios.get(`${url}/server`),
+          () => axios.get(`${url}/server`, { headers }),
           "Server is spinning up...",
           "Server is ready!"
         );
